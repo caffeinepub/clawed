@@ -29,7 +29,8 @@ import { useState } from "react";
 import MeowPage from "./MeowPage";
 
 const GITHUB_URL = "https://github.com/Carbosix/clawed";
-const ZIP_URL = "https://github.com/Carbosix/clawed";
+const ZIP_URL =
+  "https://github.com/Carbosix/Clawed/archive/refs/heads/main.zip";
 const CLONE_CMD = "git clone https://github.com/Carbosix/clawed";
 const ACCOUNT_ID =
   "f9fc12b37bb227067662f2961f4afc1cbffc732187c5805c2f36bfc336f810c1";
@@ -243,7 +244,7 @@ function CloneButton() {
       size="lg"
       onClick={copy}
       data-ocid="hero.clone.button"
-      className="text-sm font-semibold px-6 py-3 rounded-xl w-full sm:w-auto transition-all"
+      className="text-sm font-semibold px-6 py-3 rounded-xl w-full transition-all"
       style={{
         background: copied
           ? "oklch(0.72 0.18 162 / 0.12)"
@@ -332,38 +333,68 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8"
+          className="flex flex-col items-center justify-center gap-3 mb-8 w-full"
         >
-          <a href={ZIP_URL} download data-ocid="hero.download.button">
-            <Button
-              size="lg"
-              className="text-sm font-semibold px-6 py-3 rounded-xl w-full sm:w-auto"
-              style={{
-                background: "oklch(0.723 0.191 149)",
-                color: "oklch(0.1 0.03 149)",
-                border: "none",
-                boxShadow: "0 0 32px oklch(0.72 0.18 162 / 0.3)",
-              }}
+          {/* Row 1: Download + Clone */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
+            <a
+              href={ZIP_URL}
+              download
+              data-ocid="hero.download.button"
+              className="w-full sm:w-56"
             >
-              <Download className="w-4 h-4 mr-2" />
-              Download Now (v0.9.1)
-            </Button>
-          </a>
-          <CloneButton />
-        </motion.div>
+              <Button
+                size="lg"
+                className="text-sm font-semibold px-6 py-3 rounded-xl w-full"
+                style={{
+                  background: "oklch(0.723 0.191 149)",
+                  color: "oklch(0.1 0.03 149)",
+                  border: "none",
+                  boxShadow: "0 0 32px oklch(0.72 0.18 162 / 0.3)",
+                }}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download Now (v0.9.1)
+              </Button>
+            </a>
+            <div className="w-full sm:w-56">
+              <CloneButton />
+            </div>
+          </div>
 
-        {/* Meow CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.45 }}
-          className="flex justify-center mb-6"
-        >
-          <Link to="/meow" data-ocid="hero.meow.button">
+          {/* Row 2: View Repo on GitHub */}
+          <a
+            href="https://github.com/Carbosix/Clawed"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-ocid="hero.github_repo.button"
+            className="w-full sm:w-56"
+          >
             <Button
               variant="outline"
-              size="sm"
-              className="text-xs font-medium px-5 py-2 rounded-full transition-all"
+              size="lg"
+              className="text-sm font-semibold px-6 py-3 rounded-xl w-full transition-all"
+              style={{
+                background: "oklch(0.22 0.025 243)",
+                color: "oklch(0.92 0.01 240)",
+                border: "1px solid oklch(0.3 0.028 243)",
+              }}
+            >
+              <Github className="w-4 h-4 mr-2" />
+              View Repo on GitHub
+            </Button>
+          </a>
+
+          {/* Row 3: Ask Meow */}
+          <Link
+            to="/meow"
+            data-ocid="hero.meow.button"
+            className="w-full sm:w-56"
+          >
+            <Button
+              variant="outline"
+              size="lg"
+              className="text-sm font-medium px-6 py-3 rounded-xl w-full transition-all"
               style={{
                 background: "oklch(0.72 0.18 162 / 0.08)",
                 color: "oklch(0.76 0.15 168)",
@@ -798,7 +829,7 @@ function Community() {
                 className="text-xl font-bold"
                 style={{ color: "oklch(0.92 0.01 240)" }}
               >
-                101k
+                0k
               </span>
               <span
                 className="text-sm"
@@ -820,7 +851,7 @@ function Community() {
                 className="text-xl font-bold"
                 style={{ color: "oklch(0.92 0.01 240)" }}
               >
-                92.5k
+                0k
               </span>
               <span
                 className="text-sm"
@@ -848,7 +879,7 @@ function Community() {
               }}
             >
               <Github className="w-4 h-4 mr-2" />
-              View on GitHub (101k Stars / 92.5k Forks) →
+              View on GitHub (0k Stars / 0k Forks) →
             </Button>
           </a>
         </motion.div>
