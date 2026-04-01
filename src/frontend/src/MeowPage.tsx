@@ -16,17 +16,17 @@ type Message = {
 const WELCOME: Message = {
   id: 0,
   role: "assistant",
-  text: "Hey! 🐾 I'm Meow, your Clawed assistant. Ask me anything about installing or using Clawed — clone steps, setup, configuration, CLI usage, and more.",
+  text: "Hey! 🐾 I'm Meow, your Clawed assistant. Ask me anything about Clawed — setup, Rust build, Python workspace, tests, and verification commands.",
 };
 
 function getResponse(input: string): string {
   const q = input.toLowerCase();
 
   if (/what is clawed|about clawed|clawed do/.test(q)) {
-    return `**What is Clawed?**\n\nClawed is an open-source AI assistant framework by Carbosix. It lets you spin up your own AI-powered assistant with just a few commands — customizable, self-hosted, and free.\n\nCheck it out at: ${GITHUB_URL}`;
+    return `**What is Clawed?**\n\nClawed is an open-source, clean-room rewrite exploring agentic workflows and tool-use architecture. It mirrors the architectural patterns of the original harness but is not yet a 1:1 functional replacement — currently a work-in-progress.\n\nIt is written primarily in **Rust (92.8%)** with a **Python (7.2%)** workspace, and is not affiliated with the original authors.\n\nCheck it out at: ${GITHUB_URL}`;
   }
   if (/clone|git clone|download/.test(q) && !/zip/.test(q)) {
-    return `To clone the repository, run:\n\n\`\`\`\ngit clone ${GITHUB_URL}\ncd Clawed\n\`\`\`\n\nThis gives you the full source so you can run or customise Clawed locally.`;
+    return `To clone the repository, run:\n\n\`\`\`\ngit clone ${GITHUB_URL}\ncd Clawed\n\`\`\`\n\nThis gives you the full source so you can build or explore Clawed locally.`;
   }
   if (/zip|download zip/.test(q)) {
     return `You can download the ZIP directly from the homepage's **Download ZIP** button, or grab it straight from:\n${GITHUB_URL}/archive/refs/heads/main.zip`;
@@ -35,34 +35,34 @@ function getResponse(input: string): string {
     /install|setup|set up|getting started|start/.test(q) &&
     !/python|rust/.test(q)
   ) {
-    return `**Getting Started with Clawed:**\n\n1. Clone the repo:\n   \`git clone ${GITHUB_URL}\`\n2. Enter the directory:\n   \`cd Clawed\`\n3. Install dependencies (Python):\n   \`pip install -r requirements.txt\`\n4. Run Clawed:\n   \`python3 main.py\`\n\nThat's it — your own AI assistant is live!`;
+    return `**Getting Started with Clawed:**\n\n1. Clone the repo:\n   \`git clone ${GITHUB_URL}\`\n2. Enter the directory:\n   \`cd Clawed\`\n3. **Rust build (recommended):**\n   \`cd rust && cargo build --release\`\n4. **Python workspace:**\n   \`python3 -m src.main summary\`\n\nSee \`README.md\` in the repo for the full quickstart guide.`;
   }
   if (/python|pip|requirements/.test(q) && !/rust|cargo/.test(q)) {
-    return "**Python Setup:**\n\n1. Ensure Python 3.8+ is installed — check with `python3 --version`\n2. Install dependencies:\n   `pip install -r requirements.txt`\n3. Launch Clawed:\n   `python3 main.py`\n\nIf you hit missing-package errors, try `pip install -r requirements.txt --upgrade`.";
+    return "**Python Workspace:**\n\n1. Ensure Python 3.8+ is installed — check with `python3 --version`\n2. Run the workspace summary:\n   `python3 -m src.main summary`\n3. Run the verification tests:\n   `python3 -m unittest discover -s tests -v`\n\nThe Python workspace lives in the `src/` directory. There is no root-level `requirements.txt` — refer to the `src/` package for dependencies.";
   }
   if (/rust|cargo|build/.test(q)) {
-    return "**Rust Build:**\n\n1. Install Rust via [rustup.rs](https://rustup.rs)\n2. Build the project:\n   `cargo build --release`\n3. Run the binary:\n   `./target/release/clawed`\n\nRequires a recent stable Rust toolchain.";
+    return "**Rust Build:**\n\n1. Install Rust via [rustup.rs](https://rustup.rs)\n2. Navigate to the Rust workspace:\n   `cd rust`\n3. Build the project:\n   `cargo build --release`\n4. The compiled binary will be at `rust/target/release/`\n\n**Verification commands (run from `rust/`):**\n- Format: `cargo fmt`\n- Lint: `cargo clippy --workspace --all-targets -- -D warnings`\n- Test: `cargo test --workspace`\n\nRequires a recent stable Rust toolchain.";
   }
   if (/config|configur|env|environment|settings|api key/.test(q)) {
-    return "**Configuration:**\n\nClawed is configured via a `.env` file or environment variables. Common settings include:\n\n- `API_KEY` — your AI provider API key\n- `MODEL` — the model to use (e.g. `gpt-4`, `claude-3`)\n- `PORT` — the port to run on (default: 8080)\n\nCopy `.env.example` to `.env` and fill in your values before launching.";
+    return "**Configuration:**\n\nClawed is a research-oriented framework for agentic workflows. Configuration details depend on which runtime you're using (Rust CLI or Python workspace).\n\nRefer to `CLAW.md` in the repo root for guidance on working with the codebase, and `README.md` for quickstart instructions.\n\nCheck the repo for any environment variable or config file conventions relevant to your setup.";
   }
   if (/run|launch|start|usage|how to use/.test(q)) {
-    return "**Running Clawed:**\n\n`python3 main.py`\n\nOr if you built the Rust binary:\n`./target/release/clawed`\n\nOpen your browser at `http://localhost:8080` to chat with your assistant.";
+    return "**Running Clawed:**\n\n**Rust binary** (after `cd rust && cargo build --release`):\n`./rust/target/release/<binary-name>`\n\n**Python workspace summary:**\n`python3 -m src.main summary`\n\n**Run verification tests:**\n`python3 -m unittest discover -s tests -v`\n\nSee `README.md` for the full quickstart.";
   }
   if (/require|depend|prereq/.test(q)) {
-    return "**Prerequisites:**\n\n- **Python 3.8+** — for the Python runtime\n- **Rust** (optional) — for the compiled Rust binary\n- **git** — to clone the repository\n- An **AI API key** (OpenAI, Anthropic, etc.) for the assistant backend";
+    return "**Prerequisites:**\n\n- **Rust** (stable toolchain) — for building the Rust workspace\n- **Python 3.8+** — for the Python workspace (`src/`)\n- **git** — to clone the repository\n- **cargo** — comes with Rust, used for build, lint, and tests";
   }
   if (/struct|file|folder|director/.test(q)) {
-    return `**Repository Structure:**\n\n\`\`\`\nClawed/\n├── main.py          # Entry point\n├── requirements.txt # Python deps\n├── .env.example     # Config template\n├── src/             # Core source\n├── plugins/         # Extensible plugins\n└── tests/           # Test suite\n\`\`\`\n\nSee the full repo at ${GITHUB_URL}`;
+    return `**Repository Structure:**\n\n\`\`\`\nClawed/\n├── rust/          # Rust workspace (CLI & runtime)\n│   └── ...        # API client, MCP orchestration\n├── src/           # Python implementation workspace\n├── tests/         # Verification test suite\n├── assets/        # Assets folder\n├── .github/       # GitHub Actions workflows\n├── CLAW.md        # Guidance for working with this repo\n├── PARITY.md      # Porting status\n└── README.md      # Quickstart guide\n\`\`\`\n\nSee the full repo at ${GITHUB_URL}`;
   }
   if (/cli|command|repl/.test(q)) {
-    return "**CLI Usage:**\n\nOnce running, Clawed exposes a chat interface. You can also use CLI flags:\n\n- `--help` — show available options\n- `--model <name>` — override the default model\n- `--port <number>` — set the HTTP port\n\nRun `python3 main.py --help` for the full list.";
+    return "**CLI & Development Commands:**\n\n**Build:**\n- `cd rust && cargo build --release`\n\n**Development (run from `rust/`):**\n- Format code: `cargo fmt`\n- Lint: `cargo clippy --workspace --all-targets -- -D warnings`\n- Run tests: `cargo test --workspace`\n\n**Python workspace:**\n- Summary: `python3 -m src.main summary`\n- Tests: `python3 -m unittest discover -s tests -v`";
   }
-  if (/plugin|extend|custom/.test(q)) {
-    return "**Plugin System:**\n\nClawed supports plugins in the `plugins/` directory. To add one:\n\n1. Drop your plugin file into `plugins/`\n2. Register it in the plugin config\n3. Restart Clawed\n\nPlugins can hook into message processing, add commands, or integrate external services.";
+  if (/parity|porting|status|wip|progress|complete/.test(q)) {
+    return `**Porting Status (PARITY.md):**\n\nClawed is a **work-in-progress** clean-room rewrite. It mirrors the architectural patterns of the original harness but is **not yet a 1:1 functional replacement**.\n\nKey points:\n- Purpose: research into agentic workflows and tool-use architecture\n- Not affiliated with the original authors\n- Language split: Rust 92.8% / Python 7.2%\n\nFor the latest porting progress, see \`PARITY.md\` in the repo: ${GITHUB_URL}/blob/main/PARITY.md`;
   }
   if (/contribute|pr|pull request|open source/.test(q)) {
-    return `**Contributing to Clawed:**\n\nClawed is fully open-source! To contribute:\n\n1. Fork the repo on GitHub\n2. Create a feature branch\n3. Make your changes and add tests\n4. Open a pull request at ${GITHUB_URL}/pulls\n\nAll contributions are welcome — bug fixes, features, docs, or plugins.`;
+    return `**Contributing to Clawed:**\n\nClawed is fully open-source! To contribute:\n\n1. Fork the repo on GitHub\n2. Create a feature branch\n3. Run lint and tests before submitting:\n   - \`cargo fmt\`\n   - \`cargo clippy --workspace --all-targets -- -D warnings\`\n   - \`cargo test --workspace\`\n4. Open a pull request at ${GITHUB_URL}/pulls\n\nAll contributions are welcome — bug fixes, features, docs, or porting work.`;
   }
   if (/license|mit|copyright/.test(q)) {
     return `Clawed is open-source software. Check the LICENSE file in the repository for full details: ${GITHUB_URL}/blob/main/LICENSE`;
@@ -71,7 +71,7 @@ function getResponse(input: string): string {
     return "You can support Clawed's development with an ICP donation! Head to the **Clawed homepage** and scroll to the donation section — you'll find the Account ID and Principal ID there with one-click copy.";
   }
 
-  return "I'm not sure about that one. Try asking about installation, cloning, Python or Rust setup, configuration, CLI usage, or plugins! 🐾";
+  return "I'm not sure about that one. Try asking about cloning, Rust build, Python workspace, tests, verification commands, or porting status! 🐾";
 }
 
 function renderInlinePart(part: string, partKey: string) {
@@ -304,7 +304,7 @@ export default function MeowPage() {
   const suggestions = [
     "How do I clone Clawed?",
     "Getting started",
-    "Configuration setup",
+    "Rust build steps",
     "What is Clawed?",
   ];
 
@@ -496,7 +496,7 @@ export default function MeowPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about setup, configuration, CLI, plugins..."
+            placeholder="Ask about setup, Rust build, Python workspace, tests..."
             rows={1}
             data-ocid="meow.textarea"
             className="flex-1 bg-transparent resize-none text-sm leading-relaxed outline-none placeholder:opacity-50"
@@ -534,8 +534,8 @@ export default function MeowPage() {
           className="text-center text-xs mt-3"
           style={{ color: "oklch(0.38 0.012 240)" }}
         >
-          Meow knows Clawed's setup, configuration, CLI, plugins, and
-          contribution guide.
+          Meow knows Clawed's setup, Rust build, Python workspace, tests, and
+          verification commands.
         </p>
       </div>
     </div>
