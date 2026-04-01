@@ -8,6 +8,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  Link,
+  Outlet,
+  RouterProvider,
+  createRootRoute,
+  createRoute,
+  createRouter,
+} from "@tanstack/react-router";
+import {
   Check,
   Copy,
   Download,
@@ -18,15 +26,16 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
+import MeowPage from "./MeowPage";
 
-const GITHUB_URL = "https://github.com/instructkr/claw-code";
-const ZIP_URL =
-  "https://github.com/instructkr/claw-code/archive/refs/heads/main.zip";
-const CLONE_CMD = "git clone https://github.com/instructkr/claw-code.git";
+const GITHUB_URL = "https://github.com/Carbosix/clawed";
+const ZIP_URL = "https://github.com/Carbosix/clawed";
+const CLONE_CMD = "git clone https://github.com/Carbosix/clawed";
 const ACCOUNT_ID =
   "f9fc12b37bb227067662f2961f4afc1cbffc732187c5805c2f36bfc336f810c1";
 const PRINCIPAL_ID =
   "ccp2l-7oyqh-jkdow-rlca6-ejbc4-7yhjv-kwbtp-2o4ju-rjfyy-t6hit-gae";
+const LOGO_SRC = "/assets/clawed-logo-019d495a-5d97-75e6-8937-dad675f6b206.png";
 
 const features = [
   {
@@ -58,7 +67,7 @@ const features = [
 const codeLines: { text: string; type: "comment" | "command" | "blank" }[] = [
   { text: "# Clone the repository", type: "comment" },
   {
-    text: "git clone https://github.com/instructkr/claw-code.git",
+    text: "git clone https://github.com/Carbosix/clawed",
     type: "command",
   },
   { text: "cd claw-code", type: "command" },
@@ -124,16 +133,12 @@ function Nav() {
     >
       <div className="container mx-auto max-w-6xl px-6 py-3 flex items-center justify-between">
         {/* Brand */}
-        <div className="flex items-center gap-2">
-          <div
-            className="w-7 h-7 rounded-md flex items-center justify-center text-sm"
-            style={{
-              background: "oklch(0.72 0.18 162 / 0.2)",
-              border: "1px solid oklch(0.72 0.18 162 / 0.4)",
-            }}
-          >
-            🦾
-          </div>
+        <a href="#hero" className="flex items-center gap-2">
+          <img
+            src={LOGO_SRC}
+            alt="Clawed logo"
+            className="w-8 h-8 object-contain"
+          />
           <span
             className="font-bold text-lg tracking-widest"
             style={{
@@ -143,7 +148,7 @@ function Nav() {
           >
             CLAWED
           </span>
-        </div>
+        </a>
 
         {/* Nav links */}
         <nav
@@ -151,7 +156,7 @@ function Nav() {
           aria-label="Main navigation"
         >
           {[
-            { label: "Home", href: "#hero", active: true },
+            { label: "Home", href: "#hero" },
             { label: "Features", href: "#features" },
             { label: "Quick Start", href: "#quickstart" },
             { label: "GitHub", href: GITHUB_URL, external: true },
@@ -163,15 +168,19 @@ function Nav() {
               rel={link.external ? "noopener noreferrer" : undefined}
               data-ocid={`nav.${link.label.toLowerCase().replace(" ", "_")}.link`}
               className="text-sm transition-colors"
-              style={{
-                color: link.active
-                  ? "oklch(0.76 0.15 168)"
-                  : "oklch(0.72 0.018 240)",
-              }}
+              style={{ color: "oklch(0.72 0.018 240)" }}
             >
               {link.label}
             </a>
           ))}
+          <Link
+            to="/meow"
+            data-ocid="nav.meow.link"
+            className="text-sm font-medium transition-colors"
+            style={{ color: "oklch(0.76 0.15 168)" }}
+          >
+            🐾 Meow
+          </Link>
         </nav>
 
         {/* CTA */}
@@ -278,6 +287,20 @@ function Hero() {
       <FloatingGlyph text="--release" x="75%" y="78%" delay={1.2} />
 
       <div className="relative z-10 max-w-4xl mx-auto px-6">
+        {/* Logo */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="flex justify-center mb-6"
+        >
+          <img
+            src={LOGO_SRC}
+            alt="Clawed logo"
+            className="w-24 h-24 object-contain drop-shadow-[0_0_32px_oklch(0.72_0.18_162_/_0.5)]"
+          />
+        </motion.div>
+
         {/* Main heading */}
         <motion.h1
           initial={{ opacity: 0, y: 32 }}
@@ -329,11 +352,34 @@ function Hero() {
           <CloneButton />
         </motion.div>
 
+        {/* Meow CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.45 }}
+          className="flex justify-center mb-6"
+        >
+          <Link to="/meow" data-ocid="hero.meow.button">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs font-medium px-5 py-2 rounded-full transition-all"
+              style={{
+                background: "oklch(0.72 0.18 162 / 0.08)",
+                color: "oklch(0.76 0.15 168)",
+                border: "1px solid oklch(0.72 0.18 162 / 0.3)",
+              }}
+            >
+              🐾 Ask Meow for help installing
+            </Button>
+          </Link>
+        </motion.div>
+
         {/* Release pill */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.45 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
           className="flex justify-center"
         >
           <Badge
@@ -812,7 +858,6 @@ function Community() {
 }
 
 function Footer() {
-  const year = new Date().getFullYear();
   const hostname =
     typeof window !== "undefined" ? window.location.hostname : "";
   const caffeineUrl = `https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(hostname)}`;
@@ -826,7 +871,11 @@ function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Brand */}
           <div className="flex items-center gap-2">
-            <span className="text-base">🦾</span>
+            <img
+              src={LOGO_SRC}
+              alt="Clawed logo"
+              className="w-6 h-6 object-contain"
+            />
             <span
               className="font-bold tracking-widest text-sm"
               style={{ color: "oklch(0.92 0.01 240)" }}
@@ -881,17 +930,7 @@ function Footer() {
             color: "oklch(0.44 0.012 240)",
           }}
         >
-          © {year} Clawed. Open-source on{" "}
-          <a
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:underline"
-            style={{ color: "oklch(0.72 0.18 162)" }}
-          >
-            GitHub
-          </a>
-          . Built with ❤️ using{" "}
+          © 2026 Clawed. Open-Source Magic. Built with 💚 using{" "}
           <a
             href={caffeineUrl}
             target="_blank"
@@ -907,7 +946,7 @@ function Footer() {
   );
 }
 
-export default function App() {
+function HomePage() {
   return (
     <div className="min-h-screen">
       <Nav />
@@ -921,4 +960,35 @@ export default function App() {
       <Footer />
     </div>
   );
+}
+
+// TanStack Router setup
+const rootRoute = createRootRoute({
+  component: () => <Outlet />,
+});
+
+const homeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/",
+  component: HomePage,
+});
+
+const meowRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/meow",
+  component: MeowPage,
+});
+
+const routeTree = rootRoute.addChildren([homeRoute, meowRoute]);
+
+const router = createRouter({ routeTree });
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
+
+export default function App() {
+  return <RouterProvider router={router} />;
 }
